@@ -1,5 +1,6 @@
+-- ====================
 -- Data Model Creation
-
+-- ====================
 
 CREATE TABLE aisles (
     aisle_id SMALLINT PRIMARY KEY,
