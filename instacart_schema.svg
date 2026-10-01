@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 950 550" style="background-color: #f8fafc; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;">
+  <style>
+    .box { fill: #ffffff; stroke: #cbd5e1; stroke-width: 1.5; rx: 6; }
+    .header { fill: #0f172a; }
+    .title { fill: #ffffff; font-family: system-ui, -apple-system, sans-serif; font-size: 14px; font-weight: 600; letter-spacing: 0.5px; }
+    .text { fill: #334155; font-size: 13px; }
+    .key { font-weight: bold; }
+    .pk-icon { fill: #eab308; }
+    .fk-icon { fill: #3b82f6; }
+    .line { stroke: #94a3b8; stroke-width: 1.5; fill: none; }
+  </style>
+
+  <!-- Relational Lines -->
+  <path class="line" d="M 270 95 L 380 95" />
+  <path class="line" d="M 270 140 L 320 140 L 320 280 L 380 280" />
+  <path class="line" d="M 690 120 L 640 120 L 640 115 L 580 115" />
+  <path class="line" d="M 690 140 L 640 140 L 640 300 L 580 300" />
+  <path class="line" d="M 795 320 L 795 230" />
+  <path class="line" d="M 855 430 L 855 230" />
+
+  <!-- Table: orders -->
+  <g transform="translate(30, 40)">
+    <rect class="box" width="240" height="175"/>
+    <rect class="header" width="240" height="30" rx="6"/>
+    <rect class="header" width="240" height="15" y="15"/>
+    <text class="title" x="12" y="20">orders</text>
+    <rect class="pk-icon" x="12" y="42" width="8" height="8" rx="2"/><text class="text key" x="28" y="50">order_id (PK)</text>
+    <text class="text" x="28" y="70">user_id</text>
+    <text class="text" x="28" y="90">eval_set</text>
+    <text class="text" x="28" y="110">order_number</text>
+    <text class="text" x="28" y="130">order_dow</text>
+    <text class="text" x="28" y="150">order_hour_of_day</text>
+    <text class="text" x="28" y="170">days_since_prior_order</text>
+  </g>
+
+  <!-- Table: order_products_prior -->
+  <g transform="translate(380, 40)">
+    <rect class="box" width="200" height="115"/>
+    <rect class="header" width="200" height="30" rx="6"/>
+    <rect class="header" width="200" height="15" y="15"/>
+    <text class="title" x="12" y="20">order_products_prior</text>
+    <rect class="fk-icon" x="12" y="42" width="8" height="8" rx="2"/><text class="text key" x="28" y="50">order_id (FK)</text>
+    <rect class="fk-icon" x="12" y="62" width="8" height="8" rx="2"/><text class="text key" x="28" y="70">product_id (FK)</text>
+    <text class="text" x="28" y="90">add_to_cart_order</text>
+    <text class="text" x="28" y="110">reordered</text>
+  </g>
+
+  <!-- Table: order_products_train -->
+  <g transform="translate(380, 220)">
+    <rect class="box" width="200" height="115"/>
+    <rect class="header" width="200" height="30" rx="6"/>
+    <rect class="header" width="200" height="15" y="15"/>
+    <text class="title" x="12" y="20">order_products_train</text>
+    <rect class="fk-icon" x="12" y="42" width="8" height="8" rx="2"/><text class="text key" x="28" y="50">order_id (FK)</text>
+    <rect class="fk-icon" x="12" y="62" width="8" height="8" rx="2"/><text class="text key" x="28" y="70">product_id (FK)</text>
+    <text class="text" x="28" y="90">add_to_cart_order</text>
+    <text class="text" x="28" y="110">reordered</text>
+  </g>
+
+  <!-- Table: products -->
+  <g transform="translate(690, 100)">
+    <rect class="box" width="210" height="130"/>
+    <rect class="header" width="210" height="30" rx="6"/>
+    <rect class="header" width="210" height="15" y="15"/>
+    <text class="title" x="12" y="20">products</text>
+    <rect class="pk-icon" x="12" y="42" width="8" height="8" rx="2"/><text class="text key" x="28" y="50">product_id (PK)</text>
+    <text class="text" x="28" y="70">product_name</text>
+    <rect class="fk-icon" x="12" y="82" width="8" height="8" rx="2"/><text class="text key" x="28" y="90">aisle_id (FK)</text>
+    <rect class="fk-icon" x="12" y="102" width="8" height="8" rx="2"/><text class="text key" x="28" y="110">department_id (FK)</text>
+  </g>
+
+  <!-- Table: aisles -->
+  <g transform="translate(690, 320)">
+    <rect class="box" width="210" height="75"/>
+    <rect class="header" width="210" height="30" rx="6"/>
+    <rect class="header" width="210" height="15" y="15"/>
+    <text class="title" x="12" y="20">aisles</text>
+    <rect class="pk-icon" x="12" y="42" width="8" height="8" rx="2"/><text class="text key" x="28" y="50">aisle_id (PK)</text>
+    <text class="text" x="28" y="70">aisle</text>
+  </g>
+
+  <!-- Table: departments -->
+  <g transform="translate(690, 430)">
+    <rect class="box" width="210" height="75"/>
+    <rect class="header" width="210" height="30" rx="6"/>
+    <rect class="header" width="210" height="15" y="15"/>
+    <text class="title" x="12" y="20">departments</text>
+    <rect class="pk-icon" x="12" y="42" width="8" height="8" rx="2"/><text class="text key" x="28" y="50">department_id (PK)</text>
+    <text class="text" x="28" y="70">department</text>
+  </g>
+</svg>
