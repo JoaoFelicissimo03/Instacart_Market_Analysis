@@ -4,7 +4,7 @@ Phase 1 - Database Setup (30/09)
 
 Phase 2 - Cohort Retention (1/10) 
 
-Phase 3 - Hero Products/Departments () 
+Phase 3 - Hero Products/Departments (7/10) 
 
 Phase 4 - Cross Selling Pairs () 
 
