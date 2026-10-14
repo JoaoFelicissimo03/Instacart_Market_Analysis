@@ -6,7 +6,7 @@ Phase 2 - Cohort Retention (1/10)
 
 Phase 3 - Hero Products/Departments (7/10) 
 
-Phase 4 - Cross Selling Pairs () 
+Phase 4 - Cross Selling Pairs (14/10) 
 
 Phase 5 - Survival Matrix () 
 
