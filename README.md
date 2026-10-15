@@ -1,6 +1,6 @@
 dataset: https://www.kaggle.com/datasets/psparks/instacart-market-basket-analysis?resource=download
 
-Phase 1 - Database Setup (30/09) 
+Phase 1 - Database Setup (30/09) Remake (14/10)
 
 Phase 2 - Cohort Retention (1/10) 
 
