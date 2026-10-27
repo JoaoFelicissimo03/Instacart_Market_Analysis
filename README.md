@@ -11,5 +11,3 @@ Phase 4 - Cross Selling Pairs (14/10)
 Phase 5 - Survival Matrix (In progress) 
 
 Phase 6 - README () 
-
-Pause for PL-300
