@@ -4,7 +4,7 @@ Phase 1 - Database Setup (30/09) Remake (14/10)
 
 Phase 2 - Cohort Retention (1/10) Remake (15/10)
 
-Phase 3 - Hero Products/Departments (7/10) Remaking 
+Phase 3 - Hero Products/Departments (7/10) Remake 28/10
 
 Phase 4 - Cross Selling Pairs (14/10) 
 
