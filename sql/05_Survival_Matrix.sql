@@ -7,11 +7,9 @@
 --
 -- About the time data (read this first):
 --   The dataset has no calendar dates, only days_since_prior_order: the gap in days since the user's previous order.
-
 --   That gap is capped at 30, so a value of 30 means "30 days or more". Two consequences:
 --   - A gap below 30 is exact. Everything about the time to the SECOND order is therefore exact below 30 days,
 --     and all longer gaps fall into one "30 or more" bucket (QUERY 1).
-
 --   - Adding gaps over several orders gives a LOWER BOUND of the real elapsed time, because every capped gap hides an
 --     unknown extra. "The user stayed at least 90 days" is a safe statement (QUERY 2); placing later orders inside
 --     exact day windows (for example "active between day 31 and 60") is not, so no such windows are used. A window
@@ -68,7 +66,6 @@ ORDER BY onboarding_cohort;
 --   tenure_days = days between the first and the last order, as the sum of the gaps. This is a LOWER BOUND of the
 --   real tenure (capped gaps hide extra days), so every percentage below is the share of users CONFIRMED to have
 --   stayed at least that long; the real share is equal or higher.
-
 --   Unlike an activity window, this can only fall as the threshold grows, which is what makes it a survival curve.
 -- =======================================================================================================================
 WITH user_tenure AS (
@@ -121,31 +118,31 @@ FROM orders;
 /* ============================================================================
    EXECUTIVE INSIGHTS
    ============================================================================
- 
+
    1. The second order is the slow step: 32.58% of users place it within 7
       days, 55.75% within 14 and 68.21% within 21, while 23.20% wait 30 days
       or more (median 13 days). The 30-day cap applies to 23.20% of second-order
       gaps but only to about 10.7% of all later gaps, so coming back for the
       first time takes longer than coming back afterwards.
- 
+
    2. Small first baskets are the slow cohort: 52.93% of users with 1-5 items
       are back within 14 days (56.52% to 57.22% in the other cohorts) and
       25.64% wait 30 days or more (21.84% to 22.38%). The median is 14 days
       against 12 to 13. With 40,000 to 64,000 users per cohort, these gaps are
       well above sampling noise.
- 
+
    3. There is no gradient above 5 items: the 6-10, 11-15 and 16+ cohorts are
       within about one point of each other at 14 days and at 30+ days, and in
       the first week the 16+ cohort is slower than the 6-10 cohort (31.07% vs
       34.07%). A possible reading, not tested here, is that users who stock up
       in a large first order need the next one later.
- 
+
    4. Tenure rises with basket size, but only slightly: the share confirmed to
       stay at least 90 days is 73.55% for 1-5 items and 76.33% for 16+ items
       (median lower bound 140 vs 168 days). At 30 and 60 days the differences
       are under 0.6 points. Tenure grows with the number of orders, so this
       partly restates script 02.
- 
+
    5. Across scripts 02 to 05: first-basket size is associated with how many
       orders users go on to place, but the link with the speed of coming back
       is mostly "a small first basket is slower", not "a bigger one is
@@ -153,7 +150,7 @@ FROM orders;
       reflects household size or shopping intent. A nudge for users with a
       small first basket (for example a reminder around day 10 to 14) is a
       candidate for an A/B test, not a proven lever.
- 
+
    LIMITATIONS
    - Time is approximate: gaps are capped at 30 days (11.49% of all gaps, and
      73.72% of users have at least one). The time to the second order is
@@ -165,4 +162,3 @@ FROM orders;
      a common end date, so it is not churn at a calendar date.
    - The dataset has no prices, so nothing here says anything about revenue.
    ============================================================================ */
- 

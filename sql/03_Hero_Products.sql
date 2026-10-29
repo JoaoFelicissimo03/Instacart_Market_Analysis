@@ -5,18 +5,13 @@
 -- -----------------------------------------------------------------------------------------------------------------------
 -- How to read these metrics:
 --   - Loyal user: a user with 20 or more orders in the dataset (is_loyal = 1).
-
 --   - loyalty_rate_pct: share of a product's (or department's) first-time buyers who are loyal.
-
 --   - lift_vs_baseline: that share divided by the share across all users. 1.00 = same as the average user.
-
 --   - adjusted_lift: loyal users observed, divided by the loyal users we would expect if those buyers behaved like
 --     the average user with the same first-basket size. Script 02 showed that bigger first baskets go with higher
 --     loyalty, so a product found mostly in big baskets would look good just because of that.
 --     1.00 = no effect beyond first-basket size.
-
 --   - Results show association, not causation (see the limitations at the end).
-
 --   - In pgAdmin only the last result of a script is displayed, so each SELECT is best run on its own.
 -- =======================================================================================================================
 
@@ -24,16 +19,11 @@
 -- =======================================================================================================================
 -- STEP 0: Analytical base table - one row per user (reused by the scripts that follow)
 --   first_order_id      : the user's order with order_number = 1
-
 --   first_basket_size   : number of products in that order
-
 --   lifetime_orders     : highest order_number of the user
-
 --   is_loyal            : 1 if lifetime_orders >= 20, else 0
-
 --   expected_loyal      : share of loyal users among all users with the same first-basket size (capped at 30 items).
 --                         This is the loyalty an "average" user with that basket size would have.
-
 -- =======================================================================================================================
 DROP MATERIALIZED VIEW IF EXISTS user_summary;
 
@@ -142,11 +132,11 @@ ORDER BY adjusted_lift DESC;
 /* ============================================================================
    EXECUTIVE INSIGHTS: PRODUCTS
    ============================================================================
- 
+
    1. A clear pattern: 23 of the top 25 products come from produce (13) or
       dairy eggs (10), and 18 of the 25 are organic. Five are organic milk
       variants.
- 
+
    2. It survives the basket-size adjustment: adjusted_lift ranges from 1.25
       to 1.55 (raw lift 1.33 to 1.68). First-basket size explains a small
       part of the gap, since these buyers start with 14 to 18 items against
@@ -155,34 +145,34 @@ ORDER BY adjusted_lift DESC;
       1,313) and Organic Bartlett Pear (1.49, 2,039). The best supported by
       volume are Organic Strawberries (1.36, 16,464 buyers), Organic Whole
       Milk (1.30, 7,223) and Organic Blueberries (1.25, 7,102).
- 
+
    3. The signal sits in specific products, not in whole departments: produce
       and dairy eggs as departments have an adjusted_lift of only 1.03, while
       individual organic items reach 1.25 to 1.55.
- 
+
    4. One product breaks the pattern: Sparkling Mineral Water has small first
       baskets (9.7 items) and still an adjusted_lift of 1.26, so basket size
       does not explain it. With 1,101 buyers it deserves caution.
- 
+
    ============================================================================
    EXECUTIVE INSIGHTS: DEPARTMENTS
    ============================================================================
- 
+
    5. Only two departments stand clearly above the average user: 'babies'
       (34.92%, lift 1.34, adjusted 1.25) and 'bulk' (34.25%, lift 1.31,
       adjusted 1.23). About a quarter of each gap is explained by larger
       first baskets (16.3 and 15.0 items). 'bulk' has only 1,714 buyers, so
       its rate is noisier.
- 
+
    6. Once basket size is accounted for, 15 of the 19 departments sit within
       10% of the average user (adjusted_lift between 0.90 and 1.03). The
       first-basket department separates users much less than the product.
- 
+
    7. 'alcohol' is the lowest (20.58%, lift 0.79, adjusted 0.79). Its first
       baskets are small (9.4 items), but basket size does not explain the
       gap, since the adjusted value equals the raw one. This is not a verdict
       on the segment's value: the dataset has no prices or revenue.
- 
+
    READING THE RESULTS
    - Association, not causation. A plausible reading is that fresh,
      perishable items in a first order signal someone using the service for
@@ -191,7 +181,7 @@ ORDER BY adjusted_lift DESC;
    - The exact order within the top 25 should not be over-read: ranking many
      products by a ratio favours some lucky ones, and the smallest groups have
      about 1,100 buyers. The overall pattern matters more than the position.
- 
+
    LIMITATIONS
    - Every user has between 4 and 100 orders, so users who left after one to
      three orders are not in the data.

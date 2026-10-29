@@ -1,6 +1,22 @@
 -- =====================================================================================================================
 -- 01_Database_Setup.sql
 -- Instacart Market Basket Analysis - PostgreSQL database setup
+-- ---------------------------------------------------------------------------------------------------------------------
+-- What this script does:
+--   1. Drops and recreates all tables (safe to re-run)
+--   2. Defines the data model
+--   3. Bulk-loads the six Instacart CSV files
+--   4. Adds primary keys, foreign keys and indexes AFTER the load (faster than maintaining them row by row)
+--   5. Refreshes planner statistics
+--   6. Runs data quality checks against the expected dataset figures
+--
+-- Requirements:
+--   - PostgreSQL 12 or later
+--   - The Instacart CSV files (Kaggle: "Instacart Market Basket Analysis") stored in a single local folder
+--   - A role allowed to run server-side COPY (superuser or member of pg_read_server_files)
+--
+-- Before running: set the folder path in the 'data_dir' variable in STEP 3.
+-- (psql alternative: replace the DO block in STEP 3 with \copy commands that use relative paths.)
 -- =====================================================================================================================
 
 -- More memory for building indexes and constraints on the ~32M-row table (applies to this session only)
@@ -42,13 +58,13 @@ CREATE TABLE products (
 
 CREATE TABLE orders (
     order_id               INTEGER PRIMARY KEY,
-    user_id                INTEGER  NOT NULL,   
-    eval_set               VARCHAR(10) NOT NULL, 
-    order_number           SMALLINT NOT NULL,   
+    user_id                INTEGER  NOT NULL,   -- no users table exists in the dataset, so no foreign key
+    eval_set               VARCHAR(10) NOT NULL, -- 'prior', 'train' or 'test'
+    order_number           SMALLINT NOT NULL,   -- 1 = the user's first order
     order_dow              SMALLINT,
     order_hour_of_day      SMALLINT,
-    days_since_prior_order REAL             
-                                      
+    days_since_prior_order REAL                 -- NULL on each user's first order; capped at 30 by the dataset;
+                                                -- REAL because the CSV stores values like 7.0
 );
 
 -- Order line items of the 'prior' orders (history)
@@ -70,7 +86,7 @@ CREATE TABLE order_products_train (
 
 -- =====================================================================================================================
 -- STEP 3: Bulk load
--- Only 'data_dir' needs to be edited.
+-- Only 'data_dir' needs to be edited. Use forward slashes (they also work on Windows) and keep the trailing slash.
 -- =====================================================================================================================
 DO $$
 DECLARE

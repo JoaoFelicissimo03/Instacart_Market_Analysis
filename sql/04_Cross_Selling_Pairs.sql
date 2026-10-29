@@ -8,22 +8,17 @@
 -- How to read these metrics:
 --   - Pair: two different products bought together in a user's first order, at least one of them from the
 --     'babies' department.
-
 --   - loyalty_rate_pct: share of the users who bought the pair in their first order that are loyal.
-
 --   - expected_rate_pct: the share we would expect if those users behaved like the average user with the same
 --     first-basket size (script 03 explains why this matters).
-
 --   - adjusted_lift: loyalty_rate_pct / expected_rate_pct. 1.00 = no effect beyond first-basket size.
-
 --   - adjusted_lift_conservative: the same ratio, but using the lower end of a 95% confidence interval (Wilson)
 --     for the loyalty rate. Pairs are ranked by this column, so a pair only ranks high if it is both high and well
 --     supported by data. Ranking by the plain rate would reward pairs that are high by chance, because only about
 --     9,000 users have a baby product in their first order and each pair is bought by a small share of them.
-
 --   - Results show association, not causation (see the limitations at the end).
 -- =======================================================================================================================
- 
+
 -- STEP 1: First orders that contain at least one product from the 'babies' department
 WITH baby_first_orders AS (
     SELECT DISTINCT
@@ -34,7 +29,7 @@ WITH baby_first_orders AS (
     JOIN departments d            ON p.department_id = d.department_id
     WHERE d.department = 'babies'
 ),
- 
+
 -- STEP 2: Every product inside those baskets, with the loyalty flags of the user who placed the order
 basket_items AS (
     SELECT
@@ -50,7 +45,7 @@ basket_items AS (
     JOIN products p               ON opp.product_id = p.product_id
     JOIN departments d            ON p.department_id = d.department_id
 ),
- 
+
 -- STEP 3: Self-join to build the pairs. product_id < product_id counts each pair once (A+B, not also B+A).
 -- Only pairs with at least one baby product are kept, and at least 50 first orders are required.
 pair_stats AS (
@@ -71,7 +66,7 @@ pair_stats AS (
              i2.product_id, i2.product_name, i2.department
     HAVING COUNT(*) >= 50
 ),
- 
+
 -- STEP 4: Observed rate, expected rate and the lower end of the 95% Wilson interval (z = 1.96)
 pair_rates AS (
     SELECT
@@ -84,7 +79,7 @@ pair_rates AS (
             / (1 + 3.8416 / pair_orders)         AS rate_lower_bound
     FROM pair_stats
 )
- 
+
 -- STEP 5: Rank the pairs by the conservative adjusted lift
 SELECT
     product_a,
@@ -101,17 +96,16 @@ FROM pair_rates
 ORDER BY adjusted_lift_conservative DESC, pair_orders DESC
 LIMIT 15;
 
-
 /* ============================================================================
    EXECUTIVE INSIGHTS
    ============================================================================
- 
+
    1. Starting point: users with a baby product in their first order reach
       20+ orders at 34.92% (9,199 users, adjusted lift 1.25 in script 03),
       against 26.15% for all users. The 15 pairs below reach 47.37% to 64.71%,
       with an adjusted lift of 1.62 to 2.17 (1.20 to 1.71 on the conservative
       measure). Every pair stays above 1.00 even on the conservative measure.
- 
+
    2. What the pairs have in common: 14 of the 15 combine a baby product with
       one of four everyday items: strawberries (5 pairs), avocado (4, including
       Organic Hass Avocado), banana (4, including Bag of Organic Bananas) and
@@ -119,12 +113,12 @@ LIMIT 15;
       Three baby foods recur: Stage 1 Apples Sweet Potatoes Pumpkin &
       Blueberries (5 pairs), Stage 2 Blueberry Pear & Purple Carrot (4) and
       Organic Pears, Peas and Broccoli Puree Stage 1 (3).
- 
+
    3. The highest pair: Stage 1 Apples Sweet Potatoes Pumpkin & Blueberries
       with Organic Avocado, where 33 of 51 users became loyal (64.71%,
       adjusted lift 2.17). With 51 first orders, the 95% interval for that
       rate runs from about 51% to 76%, so the exact value is uncertain.
- 
+
    4. Read with caution:
       - Small groups: every pair comes from 50 to 104 first orders.
       - The pairs overlap: the same baskets appear in several pairs, so the 15
@@ -136,13 +130,13 @@ LIMIT 15;
       - Part of each lift is the babies effect itself, since every basket here
         has a baby product. Compared with the 34.92% of all baby baskets, the
         pairs are 1.36 to 1.85 times higher, not 1.62 to 2.17.
- 
+
    5. Not proven as a cause: strawberries, avocado, banana and whole milk are
       everyday staples, so these pairs may simply signal a household doing its
       regular grocery shop through the app. Whether suggesting one of these
       items at checkout would raise loyalty can only be answered with an
       experiment (A/B test).
- 
+
    LIMITATIONS
    - Only about 9,000 users have a baby product in their first order, so every
      pair is bought by a small group.
